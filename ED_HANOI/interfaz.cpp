@@ -2,20 +2,20 @@
 
 int interfaz::menuPrincipal(SDL_Renderer* _renderer)
 {
-    bool menu_done = false;
-    SDL_Event e;
-    int n_disks = 3;
+    menuTerminado = false;
+    dificultad = 3;
 
-    while (!menu_done)
+    while (!menuTerminado)
     {
         SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
         SDL_RenderClear(_renderer);
 
-        _mInterfaz.mostrarTexto(_renderer, "Torres de Hanoi", 220, 120, "ArialNovaCond", 30, { 255, 215, 0 });
+        _mInterfaz.mostrarTexto(_renderer, "Torres de Hanoi", 157, 122, "ArialNovaCond", 50, { 175, 175, 175 });
+        _mInterfaz.mostrarTexto(_renderer, "Torres de Hanoi", 155, 120, "ArialNovaCond", 50, { 255, 215, 0 });
         _mInterfaz.mostrarTexto(_renderer, "Usa las feclas direccionales", 150, 190, "ArialNovaCond", 30, { 0, 0, 0 });
         _mInterfaz.mostrarTexto(_renderer, "para cambiar de dificultad:", 160, 220, "ArialNovaCond", 30, { 0, 0, 0 });
-        _mInterfaz.mostrarTexto(_renderer, to_string(n_disks), 315, 260, "ArialNovaCond", 30, { 0, 0, 255 });
-        _mInterfaz.mostrarTexto(_renderer, "Pulsa ENTER para continuar", 160, 320, "ArialNovaCond", 30, { 0, 0, 0 });
+        _mInterfaz.mostrarTexto(_renderer, to_string(dificultad), 315, 260, "ArialNovaCond", 30, { 0, 0, 255 });
+        _mInterfaz.mostrarTexto(_renderer, "Pulsa ENTER para continuar", 150, 320, "ArialNovaCond", 30, { 0, 0, 0 });
 
         SDL_RenderPresent(_renderer);
 
@@ -23,33 +23,36 @@ int interfaz::menuPrincipal(SDL_Renderer* _renderer)
         {
             if (e.type == SDL_QUIT)
             {
-                menu_done = true;
-                n_disks = 8;
+                dificultad = 8;
+                menuTerminado = true;
             }
             else if (e.type == SDL_KEYDOWN) 
             {
-                if (e.key.keysym.sym == SDLK_q) 
+                if (e.key.keysym.sym == SDLK_q || e.key.keysym.sym == SDLK_ESCAPE)
                 {
-                    menu_done = true;
+                    dificultad = 8;
+                    menuTerminado = true;
                 }
-                else if (e.key.keysym.sym == SDLK_RETURN) 
+                else if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER)
                 {
-                    menu_done = true;
+                    menuTerminado = true;
                 }
                 else if (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_UP) 
                 {
-                    n_disks++;
-                    if (n_disks > 6) 
+                    dificultad++;
+
+                    if (dificultad >= 7) 
                     {
-                        n_disks = 6;
+                        dificultad = 1;
                     }
                 }
                 else if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_DOWN) 
                 {
-                    n_disks--;
-                    if (n_disks < 1) 
+                    dificultad--;
+
+                    if (dificultad <= 0)
                     {
-                        n_disks = 1;
+                        dificultad = 6;
                     }
                 }
             }
@@ -58,23 +61,56 @@ int interfaz::menuPrincipal(SDL_Renderer* _renderer)
         SDL_Delay(1000 / 60); // Cap frame rate to 60 FPS
     }
 
-    return n_disks;
+    return dificultad;
 }
 
-void interfaz::juegoTerminado(SDL_Renderer* _renderer, int _dificultad, int _movimientos)
+bool interfaz::juegoTerminado(SDL_Renderer* _renderer, int _dificultad, int _movimientos)
 {
-    SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
-    SDL_RenderClear(_renderer);
+    menuTerminado = false;
 
-    int minMoviminetos = (1 << _dificultad) - 1;
-    _mInterfaz.mostrarTexto(_renderer, "¡La partida ha terminado!", 75, 100, "ArialNovaCond", 50, { 255, 215, 0 });
-    _mInterfaz.mostrarTexto(_renderer, "Tus movimientos: " + to_string(_movimientos), 210, 270, "ArialNovaCond", 30, { 0, 0, 0 });
-    _mInterfaz.mostrarTexto(_renderer, "Movimientos minimos: " + to_string(minMoviminetos), 180, 310, "ArialNovaCond", 30, { 255, 0, 0 });
+    while (!menuTerminado)
+    {
+        SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
+        SDL_RenderClear(_renderer);
 
-    if (minMoviminetos == _movimientos) {
-        _mInterfaz.mostrarTexto(_renderer, "¡Haz terminado con los movimientos!", 130, 170, "ArialNovaCond", 26, { 0, 128, 0 });
+        minMovimientos = (1 << _dificultad) - 1;
+        _mInterfaz.mostrarTexto(_renderer, "¡La partida ha terminado!", 77, 52, "ArialNovaCond", 50, { 175, 175, 175 });
+        _mInterfaz.mostrarTexto(_renderer, "¡La partida ha terminado!", 75, 50, "ArialNovaCond", 50, { 255, 215, 0 });
+        _mInterfaz.mostrarTexto(_renderer, "Tus movimientos: " + to_string(_movimientos), 210, 220, "ArialNovaCond", 30, { 0, 0, 0 });
+        _mInterfaz.mostrarTexto(_renderer, "Movimientos minimos: " + to_string(minMovimientos), 180, 260, "ArialNovaCond", 30, { 255, 0, 0 });
+        _mInterfaz.mostrarTexto(_renderer, "Pulsa ENTER para jugar otra partida", 115, 340, "ArialNovaCond", 30, { 0, 0, 0 });
+        _mInterfaz.mostrarTexto(_renderer, "Pulsa ESC para salir", 200, 380, "ArialNovaCond", 30, { 0, 0, 0 });
+
+        if (minMovimientos == _movimientos)
+        {
+            _mInterfaz.mostrarTexto(_renderer, "¡Haz terminado con los movimientos minimos!", 88, 120, "ArialNovaCond", 26, { 0, 128, 0 });
+        }
+
+        while (SDL_PollEvent(&e) != 0)
+        {
+            if (e.type == SDL_QUIT)
+            {
+                seguirJugando = false;
+                menuTerminado = true;
+            }
+            else if (e.type == SDL_KEYDOWN)
+            {
+                if (e.key.keysym.sym == SDLK_q || e.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    seguirJugando = false;
+                    menuTerminado = true;
+                }
+                else if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER)
+                {
+                    seguirJugando = true;
+                    menuTerminado = true;;
+                }
+            }
+        }
+
+        SDL_Delay(1000 / 60); // Cap frame rate to 60 FPS
+        SDL_RenderPresent(_renderer);
     }
 
-    SDL_RenderPresent(_renderer);
-    SDL_Delay(5000);
+    return seguirJugando;
 }

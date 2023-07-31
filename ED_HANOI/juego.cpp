@@ -33,17 +33,18 @@ int juego::iniciarJuego(int _dificultad, SDL_Renderer* _renderer)
         {
             if (e.type == SDL_QUIT) 
             {
+                movimientos = 0;
                 juegoTerminado = true;
             }
             else if (e.type == SDL_KEYDOWN) 
             {
-                // Si el usuario pulsa la tecla "Escape" el juego se reinicia
-                if (e.key.keysym.sym == SDLK_ESCAPE) 
+                // Si el usuario pulsa la tecla "r" el juego se reinicia
+                if (e.key.keysym.sym == SDLK_r) 
                 {
                     reiniciarJuego(_dificultad);
                 }
-                // Si el usuario pulsa la letra "q" el juego se termina
-                else if (e.key.keysym.sym == SDLK_q) 
+                // Si el usuario pulsa la letra "q" o "ESC" el juego se termina
+                else if (e.key.keysym.sym == SDLK_q || e.key.keysym.sym == SDLK_ESCAPE)
                 {
                     juegoTerminado = true;
                 }
