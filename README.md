@@ -1,8 +1,9 @@
-# Tarea de "Torre de Hanoi" - en Inteface
+# Tarea de "Torre de Hanoi" - en Interface
 Este es una recreacion del juego "Torres de Hanoi" escrito en C++ usando SDL2
 
 ## Descripción
 Como mencioné al inicio esta es una recreacion del juego "Torres de Hanoi" en C++, donde podrás escojer 6 niveles de dificultas, se controla con el teclado.
+
 Teclas especiales:
 - **R**: Reinicia al partida
 - **Q** o **ESC**: Cerrará el programa
